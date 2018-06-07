@@ -1,93 +1,39 @@
-//#full-example
 package task1
 
-import akka.actor.{ Actor, ActorLogging, ActorRef, ActorSystem, Props }
+import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 
-//#greeter-companion
-//#greeter-messages
-object Greeter {
-  //#greeter-messages
-  def props(message: String, printerActor: ActorRef): Props = Props(new Greeter(message, printerActor))
-  //#greeter-messages
-  final case class WhoToGreet(who: String)
-  case object Greet
+object Card {
+  def props(cardId: String, terminalActor: ActorRef): Props = Props(new Card(cardId, terminalActor))
+
+  final case class Payment(amount: Double)
+  case object Transfer
 }
-//#greeter-messages
-//#greeter-companion
 
-//#greeter-actor
-class Greeter(message: String, printerActor: ActorRef) extends Actor {
-  import Greeter._
-  import Printer._
+class Card(cardId: String, terminalActor: ActorRef) extends Actor {
+  import Card._
+  import Terminal._
 
-  var greeting = ""
+  var amount = 0.0
 
   def receive = {
-    case WhoToGreet(who) =>
-      greeting = message + ", " + who
-    case Greet           =>
-      //#greeter-send-message
-      printerActor ! Greeting(greeting)
-    //#greeter-send-message
+    case Payment(amount) =>
+      this.amount = amount
+    case Transfer           =>
+      terminalActor ! Transaction(cardId, amount)
   }
 }
-//#greeter-actor
 
-//#printer-companion
-//#printer-messages
-object Printer {
-  //#printer-messages
-  def props: Props = Props[Printer]
-  //#printer-messages
-  final case class Greeting(greeting: String)
+object Terminal {
+  def props(terminalId: String): Props = Props(new Terminal(terminalId))
+
+  final case class Transaction(cardId: String, amount: Double)
 }
-//#printer-messages
-//#printer-companion
 
-//#printer-actor
-class Printer extends Actor with ActorLogging {
-  import Printer._
+class Terminal(terminalId: String) extends Actor with ActorLogging {
+  import Terminal._
 
   def receive = {
-    case Greeting(greeting) =>
-      log.info("Greeting received (from " + sender() + "): " + greeting)
+    case Transaction(cardId, amount) =>
+      log.info("Payment received (from " + sender() + "): " + cardId + ";" + terminalId + ";" + amount)
   }
 }
-//#printer-actor
-
-//#main-class
-object AkkaQuickstart extends App {
-  import Greeter._
-
-  // Create the 'helloAkka' actor system
-  val system: ActorSystem = ActorSystem("helloAkka")
-
-  //#create-actors
-  // Create the printer actor
-  val printer: ActorRef = system.actorOf(Printer.props, "printerActor")
-
-  // Create the 'greeter' actors
-  val howdyGreeter: ActorRef =
-    system.actorOf(Greeter.props("Howdy", printer), "howdyGreeter")
-  val helloGreeter: ActorRef =
-    system.actorOf(Greeter.props("Hello", printer), "helloGreeter")
-  val goodDayGreeter: ActorRef =
-    system.actorOf(Greeter.props("Good day", printer), "goodDayGreeter")
-  //#create-actors
-
-  //#main-send-messages
-  howdyGreeter ! WhoToGreet("Akka")
-  howdyGreeter ! Greet
-
-  howdyGreeter ! WhoToGreet("Lightbend")
-  howdyGreeter ! Greet
-
-  helloGreeter ! WhoToGreet("Scala")
-  helloGreeter ! Greet
-
-  goodDayGreeter ! WhoToGreet("Play")
-  goodDayGreeter ! Greet
-  //#main-send-messages
-}
-//#main-class
-//#full-example
