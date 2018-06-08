@@ -1,5 +1,5 @@
 import akka.actor.{ActorRef, ActorSystem}
-import task1.{Card, Terminal, CardGenerator}
+import task1.{Card, CardGenerator, Terminal, TerminalGenerator}
 
 object Task1App extends App {
   import Card._
@@ -26,14 +26,14 @@ object Task1App extends App {
   creditCard ! Payment(200)
   creditCard ! Transfer
 
-  val terminalId: String = "11011"
+  val terminalId: String = TerminalGenerator.getTerminal()
   val terminal: ActorRef = system.actorOf(Terminal.props(posId), "terminalActor")
 
   val cardId: String = CardGenerator.getCard()
   val card: ActorRef =
     system.actorOf(Card.props(cardId, terminal), "cardActor")
 
-  var amount: Double = 100.0
+  var amount: Int = CardGenerator.getAmount(cardId.charAt(1))
 
   card ! Payment(amount)
   card ! Transfer

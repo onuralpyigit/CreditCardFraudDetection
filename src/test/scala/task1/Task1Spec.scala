@@ -49,8 +49,8 @@ class Task1Spec(_system: ActorSystem)
       val kind = 0
       val limit = 0
       val home = 1
-      val customerId = 1
-      val cardId = CardGenerator.generateCardId(kind, limit, home, customerId)
+      val customerNo = 1
+      val cardId = CardGenerator.generateCardId(kind, limit, home, customerNo)
       val expectedCardId = "00010001"
       cardId shouldEqual(expectedCardId)
     }
@@ -61,10 +61,34 @@ class Task1Spec(_system: ActorSystem)
       val kind = 1
       val limit = 3
       val home = 0
-      val customerId = 999
-      val cardId = CardGenerator.generateCardId(kind, limit, home, customerId)
+      val customerNo = 999
+      val cardId = CardGenerator.generateCardId(kind, limit, home, customerNo)
       val expectedCardId = "13000999"
       cardId shouldEqual(expectedCardId)
+    }
+  }
+
+  "A pos id" should {
+    "consist of kind, merchant, and location properties" in {
+      val kind = 1
+      val merchant = 0
+      val location = 46
+      val terminalNo = 1
+      val terminalId = TerminalGenerator.generateTerminalId(kind, merchant, location, terminalNo)
+      val expectedTerminalId = "10461"
+      terminalId shouldEqual(expectedTerminalId)
+    }
+  }
+
+  "A atm id" should {
+    "consist of kind, merchant, and location properties" in {
+      val kind = 0
+      val merchant = 0
+      val location = 0
+      val terminalNo = 9
+      val terminalId = TerminalGenerator.generateTerminalId(kind, merchant, location, terminalNo)
+      val expectedTerminalId = "00009"
+      terminalId shouldEqual(expectedTerminalId)
     }
   }
 

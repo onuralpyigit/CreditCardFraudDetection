@@ -8,7 +8,7 @@ import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 object Card {
   def props(cardId: String, terminalActor: ActorRef): Props = Props(new Card(cardId, terminalActor))
 
-  final case class Payment(amount: Double)
+  final case class Payment(amount: Int)
   case object Transfer
 }
 
@@ -16,7 +16,7 @@ class Card(cardId: String, terminalActor: ActorRef) extends Actor {
   import Card._
   import Terminal._
 
-  var amount = 0.0
+  var amount = 0
 
   def receive = {
     case Payment(amount) =>
@@ -29,7 +29,7 @@ class Card(cardId: String, terminalActor: ActorRef) extends Actor {
 object Terminal {
   def props(terminalId: String): Props = Props(new Terminal(terminalId))
 
-  final case class Transaction(cardId: String, amount: Double)
+  final case class Transaction(cardId: String, amount: Int)
 }
 
 class Terminal(terminalId: String) extends Actor with ActorLogging {

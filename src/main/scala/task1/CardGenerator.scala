@@ -26,13 +26,13 @@ object CardGenerator {
     return home
   }
 
-  def generateCustomerId(): Int = {
-    val customerId = generateRandomNumber(1, 1000)
-    return customerId
+  def generateCustomerNo(): Int = {
+    val customerNo = generateRandomNumber(0, 9999)
+    return customerNo
   }
 
-  def generateCardId(kind: Int, limit: Int, home: Int, customerId: Int) : String = {
-    val cardId = "" + kind + limit + "%02d".format(home) + "%04d".format(customerId)
+  def generateCardId(kind: Int, limit: Int, home: Int, customerNo: Int) : String = {
+    val cardId = "" + kind + limit + "%02d".format(home) + "%04d".format(customerNo)
     return cardId
   }
 
@@ -46,12 +46,26 @@ object CardGenerator {
     // Generate home
     val home = generateHome()
 
-    // Generate customer id
-    val customerId = generateCustomerId()
+    // Generate customer no
+    val customerNo = generateCustomerNo()
 
     // Generate card id
-    val cardId = generateCardId(kind, limit, home, customerId)
+    val cardId = generateCardId(kind, limit, home, customerNo)
 
     return cardId
+  }
+
+  def getAmount(limit: Char): Int = {
+    var maxAmount = 0
+    limit match {
+      case '0' => maxAmount = 1000
+      case '1' => maxAmount = 5000
+      case '2' => maxAmount = 10000
+      case '3' => maxAmount = 20000
+      case '4' => maxAmount = 30000
+      case _ => maxAmount = 0
+    }
+    val amount = generateRandomNumber(0, maxAmount)
+    return amount
   }
 }
