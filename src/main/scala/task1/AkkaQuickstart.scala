@@ -1,5 +1,8 @@
 package task1
 
+import java.text.SimpleDateFormat
+import java.util.Calendar
+
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 
 object Card {
@@ -32,8 +35,15 @@ object Terminal {
 class Terminal(terminalId: String) extends Actor with ActorLogging {
   import Terminal._
 
+  val dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm")
+
   def receive = {
     case Transaction(cardId, amount) =>
-      log.info("Payment received (from " + sender() + "): " + cardId + ";" + terminalId + ";" + amount)
+      // Get transaction time
+      val now = Calendar.getInstance().getTime()
+      val transactionTime = dateFormat.format(now)
+
+      // Print transaction log
+      log.info(transactionTime + ";" + cardId + ";" + terminalId + ";" + amount)
   }
 }
