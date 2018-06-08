@@ -20,7 +20,7 @@ class Task1Spec(_system: ActorSystem)
     shutdown(system)
   }
 
-  "A Card Actor" should {
+  "A debit card actor" should {
     "pass on amount when instructed to" in {
       val testProbe = TestProbe()
       val cardId = "00000001"
@@ -31,4 +31,41 @@ class Task1Spec(_system: ActorSystem)
       testProbe.expectMsg(500 millis, Transaction(cardId, amount))
     }
   }
+
+  "A credit card actor" should {
+    "pass on amount when instructed to" in {
+      val testProbe = TestProbe()
+      val cardId = "11010002"
+      val card = system.actorOf(Card.props(cardId, testProbe.ref))
+      val amount = 100
+      card ! Payment(amount)
+      card ! Transfer
+      testProbe.expectMsg(500 millis, Transaction(cardId, amount))
+    }
+  }
+
+  "A debit card id" should {
+    "consist of kind, limit, and home properties" in {
+      val kind = 0
+      val limit = 0
+      val home = 1
+      val customerId = 1
+      val cardId = CardGenerator.generateCardId(kind, limit, home, customerId)
+      val expectedCardId = "00010001"
+      cardId shouldEqual(expectedCardId)
+    }
+  }
+
+  "A credit card id" should {
+    "consist of kind, limit, and home properties" in {
+      val kind = 1
+      val limit = 3
+      val home = 0
+      val customerId = 999
+      val cardId = CardGenerator.generateCardId(kind, limit, home, customerId)
+      val expectedCardId = "13000999"
+      cardId shouldEqual(expectedCardId)
+    }
+  }
+
 }

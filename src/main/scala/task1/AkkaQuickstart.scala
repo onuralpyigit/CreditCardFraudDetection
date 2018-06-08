@@ -21,7 +21,7 @@ class Card(cardId: String, terminalActor: ActorRef) extends Actor {
   def receive = {
     case Payment(amount) =>
       this.amount = amount
-    case Transfer           =>
+    case Transfer =>
       terminalActor ! Transaction(cardId, amount)
   }
 }
