@@ -1,5 +1,6 @@
 import Task1App.system.dispatcher
 import akka.actor.{ActorRef, ActorSystem}
+import akka.event.Logging
 import task1.Card._
 import task1.{Card, CardGenerator, Terminal, TerminalGenerator}
 

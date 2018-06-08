@@ -44,7 +44,7 @@ class Terminal(terminalId: String) extends Actor with ActorLogging {
       val transactionTime = dateFormat.format(now)
 
       // Print transaction log
-      log.info(transactionTime + ";" + cardId + ";" + terminalId + ";" + amount)
-      //println(transactionTime + ";" + cardId + ";" + terminalId + ";" + amount)
+      log.info(transactionTime + "," + cardId + "," + terminalId + "," + amount)
+      println(transactionTime + "," + cardId + "," + terminalId + "," + amount)
   }
 }
