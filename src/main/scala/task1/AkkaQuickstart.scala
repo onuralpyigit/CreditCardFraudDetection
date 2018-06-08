@@ -45,5 +45,6 @@ class Terminal(terminalId: String) extends Actor with ActorLogging {
 
       // Print transaction log
       log.info(transactionTime + ";" + cardId + ";" + terminalId + ";" + amount)
+      //println(transactionTime + ";" + cardId + ";" + terminalId + ";" + amount)
   }
 }

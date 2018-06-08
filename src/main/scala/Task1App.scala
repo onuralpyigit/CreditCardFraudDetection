@@ -1,40 +1,23 @@
+import Task1App.system.dispatcher
 import akka.actor.{ActorRef, ActorSystem}
+import task1.Card._
 import task1.{Card, CardGenerator, Terminal, TerminalGenerator}
 
-object Task1App extends App {
-  import Card._
+import scala.concurrent.duration._
 
+object Task1App extends App {
   val system: ActorSystem = ActorSystem("AkkaSystemTask1")
 
-  val atmId: String = "00001"
-  val atm: ActorRef = system.actorOf(Terminal.props(atmId), "atmActor")
+  system.scheduler.schedule(500 millis, 1000 millis) {
+    val terminalId: String = TerminalGenerator.getTerminal()
+    val terminal: ActorRef = system.actorOf(Terminal.props(terminalId))
 
-  val debitCardId: String = "00000001"
-  val debitCard: ActorRef =
-    system.actorOf(Card.props(debitCardId, atm), "debitCardActor")
+    val cardId: String = CardGenerator.getCard()
+    val card: ActorRef = system.actorOf(Card.props(cardId, terminal))
 
-  debitCard ! Payment(500)
-  debitCard ! Transfer
+    val amount: Int = CardGenerator.getAmount(cardId.charAt(1))
 
-  val posId: String = "11011"
-  val pos: ActorRef = system.actorOf(Terminal.props(posId), "posActor")
-
-  val creditCardId: String = "11010002"
-  val creditCard: ActorRef =
-    system.actorOf(Card.props(creditCardId, pos), "creditCardActor")
-
-  creditCard ! Payment(200)
-  creditCard ! Transfer
-
-  val terminalId: String = TerminalGenerator.getTerminal()
-  val terminal: ActorRef = system.actorOf(Terminal.props(posId), "terminalActor")
-
-  val cardId: String = CardGenerator.getCard()
-  val card: ActorRef =
-    system.actorOf(Card.props(cardId, terminal), "cardActor")
-
-  var amount: Int = CardGenerator.getAmount(cardId.charAt(1))
-
-  card ! Payment(amount)
-  card ! Transfer
+    card ! Payment(amount)
+    card ! Transfer
+  }
 }
