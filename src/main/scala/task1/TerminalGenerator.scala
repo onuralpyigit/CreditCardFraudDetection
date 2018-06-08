@@ -1,10 +1,11 @@
 package task1
 
+import scala.util.Random
+
 object TerminalGenerator {
 
   def generateRandomNumber(start: Int, end: Int): Int = {
-    val r = new scala.util.Random
-    val n = start + r.nextInt((end - start) + 1)
+    val n = start + Random.nextInt((end - start) + 1)
     return  n
   }
 
@@ -22,13 +23,20 @@ object TerminalGenerator {
   }
 
   def generateLocation(kind: Int): Int = {
-    var location = 99
+    // Create location list
+    var locationList: List[Int] = List.range(0, 81)
+
+    // Check pos
     if (kind == 1) {
-      location = generateRandomNumber(0, 81)
+      // Add internet into location list
+      val internet = 99
+      locationList = locationList:+internet
     }
-    else {
-      location = generateRandomNumber(0, 80)
-    }
+
+    // Choose a location randomly
+    val location = locationList(Random.nextInt(locationList.size))
+
+    // Return location
     return location
   }
 

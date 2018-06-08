@@ -1,10 +1,13 @@
 package task1
 
+import scala.util.Random
+
 object CardGenerator {
 
+  val limitDistributionList: List[Int] = List(1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,3,3,4)
+
   def generateRandomNumber(start: Int, end: Int): Int = {
-    val r = new scala.util.Random
-    val n = start + r.nextInt((end - start) + 1)
+    val n = start + Random.nextInt((end - start) + 1)
     return  n
   }
 
@@ -16,7 +19,7 @@ object CardGenerator {
   def generateLimit(kind: Int): Int = {
     var limit = 0
     if (kind == 1) {
-      limit = generateRandomNumber(1, 4)
+      limit = limitDistributionList(Random.nextInt(limitDistributionList.size))
     }
     return limit
   }
