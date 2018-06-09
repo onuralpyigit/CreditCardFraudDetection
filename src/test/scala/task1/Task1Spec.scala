@@ -69,7 +69,7 @@ class Task1Spec(_system: ActorSystem)
   }
 
   "A card id" should {
-    "consist of assigned home properties" in {
+    "contain in assigned home property" in {
       val home = 1
       val cardId = CardGenerator.getCard(home)
       val expectedCardHomeLocation = "01"
@@ -78,7 +78,7 @@ class Task1Spec(_system: ActorSystem)
   }
 
   "A card id" should {
-    "consist of different home properties given terminal location when transaction is fraud" in {
+    "contain in different home property given terminal location when transaction is fraud" in {
       val terminalLocation = "01"
       val cardId = CardGenerator.getCard(terminalLocation)
       cardId.slice(2,4) should not be  (terminalLocation)
@@ -124,6 +124,36 @@ class Task1Spec(_system: ActorSystem)
       val terminalId = TerminalGenerator.generateTerminalId(kind, merchant, location, terminalNo)
       val expectedTerminalId = "00009"
       terminalId shouldEqual(expectedTerminalId)
+    }
+  }
+
+  "A terminal id" should {
+    "contain in assigned kind property" in {
+      val kind = 1
+      val terminalId = TerminalGenerator.getTerminal(kind)
+      terminalId(0) shouldEqual('1')
+    }
+  }
+
+  "A terminal id" should {
+    "contain in assigned kind and location properties" in {
+      val kind = 0
+      val location = 0
+      val terminalId = TerminalGenerator.getTerminal(kind, location)
+      terminalId(0) shouldEqual('0')
+      terminalId.slice(2,4) shouldEqual("00")
+    }
+  }
+
+  "A terminal id" should {
+    "contain in assigned kind, merchant and location properties" in {
+      val kind = 1
+      val merchant = 1
+      val location = 80
+      val terminalId = TerminalGenerator.getTerminal(kind, merchant, location)
+      terminalId(0) shouldEqual('1')
+      terminalId(1) shouldEqual('1')
+      terminalId.slice(2,4) shouldEqual("80")
     }
   }
 
