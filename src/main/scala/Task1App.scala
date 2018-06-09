@@ -8,9 +8,53 @@ import scala.concurrent.duration._
 object Task1App extends App {
   val system: ActorSystem = ActorSystem("AkkaSystemTask1")
 
-  // Normal transaction scheduler
+  /* Normal transactions */
+
+  // Scheduler for normal transaction both card and terminal same location
   system.scheduler.schedule(100 millis, 500 millis) {
+    val location:Int = CardGenerator.generateHome()
+
     // Create terminal actor
+    val kind:Int = TerminalGenerator.generateKind()
+    val terminalId: String = TerminalGenerator.getTerminal(kind, location)
+    val terminal: ActorRef = system.actorOf(Terminal.props(terminalId))
+
+    // Create card actor
+    val cardId: String = CardGenerator.getCard(location)
+    val card: ActorRef = system.actorOf(Card.props(cardId, terminal))
+
+    // Get random amount of transaction
+    val amount: Int = CardGenerator.getAmount(cardId.charAt(1))
+
+    // Transfer money
+    card ! Payment(amount)
+    card ! Transfer
+  }
+
+  // Scheduler for online transaction
+  system.scheduler.schedule(1 second, 2 seconds) {
+    // Create terminal actor
+    val pos: Int = 1 // POS
+    val internet: Int = 99 // Internet
+    val terminalId: String = TerminalGenerator.getTerminal(pos, internet)
+    val terminal: ActorRef = system.actorOf(Terminal.props(terminalId))
+
+    // Create card actor
+    val cardId: String = CardGenerator.getCard()
+    val card: ActorRef = system.actorOf(Card.props(cardId, terminal))
+
+    // Get random amount
+    val amount: Int = CardGenerator.getAmount(cardId.charAt(1))
+
+    // Transfer money
+    card ! Payment(amount)
+    card ! Transfer
+  }
+
+  // Scheduler for normal transaction card and terminal different locations
+  system.scheduler.schedule(2 second, 5 seconds) {
+    // Create terminal actor
+    val kind:Int = TerminalGenerator.generateKind()
     val terminalId: String = TerminalGenerator.getTerminal()
     val terminal: ActorRef = system.actorOf(Terminal.props(terminalId))
 
@@ -26,8 +70,10 @@ object Task1App extends App {
     card ! Transfer
   }
 
+  /* Fraud transactions */
+
   // Scheduler for online fraud transaction
-  system.scheduler.schedule(1 second, 10 seconds) {
+  system.scheduler.schedule(1 second, 20 seconds) {
     // Create terminal actor
     val pos: Int = 1 // POS
     val internet: Int = 99 // Internet
@@ -47,7 +93,7 @@ object Task1App extends App {
   }
 
   // Scheduler for fraud transaction because of drawing cash via ATM
-  system.scheduler.schedule(1 second, 20 seconds) {
+  system.scheduler.schedule(1 second, 30 seconds) {
     // Create terminal actor
     val atm: Int = 0 // ATM
     val location: Int = TerminalGenerator.generateLocation(atm)
@@ -67,7 +113,7 @@ object Task1App extends App {
   }
 
   // Scheduler for fraud transaction over different locations
-  system.scheduler.schedule(1 second, 30 seconds) {
+  system.scheduler.schedule(5 second, 40 seconds) {
     // Create terminal actor
     val terminalId: String = TerminalGenerator.getTerminal()
     val terminal: ActorRef = system.actorOf(Terminal.props(terminalId))
@@ -86,7 +132,7 @@ object Task1App extends App {
   }
 
   // Scheduler for international fraud transaction
-  system.scheduler.schedule(1 second, 30 seconds) {
+  system.scheduler.schedule(5 second, 50 seconds) {
     // Create terminal actor
     val pos: Int = 1 // POS
     val international: Int = 0 // International
@@ -106,7 +152,7 @@ object Task1App extends App {
   }
 
   // Scheduler for fraud transaction over specific merchant and location
-  system.scheduler.schedule(1 second, 45 seconds) {
+  system.scheduler.schedule(5 second, 1 minute) {
     // Create terminal actor
     val pos: Int = 1 // POS
     val tooRiskyMerchant: Int = 3
@@ -126,8 +172,8 @@ object Task1App extends App {
     card ! FraudTransfer
   }
 
-  // Scheduler for fraud transaction
-  system.scheduler.schedule(1 second, 1 minute) {
+  // Scheduler for fraud transaction that looks like normal
+  system.scheduler.schedule(10 second, 2 minute) {
     // Create terminal actor
     val terminalId: String = TerminalGenerator.getTerminal()
     val terminal: ActorRef = system.actorOf(Terminal.props(terminalId))
@@ -137,7 +183,7 @@ object Task1App extends App {
     val card: ActorRef = system.actorOf(Card.props(cardId, terminal))
 
     // Get random amount of fraud transaction
-    val amount: Int = CardGenerator.getFraudAmount(cardId.charAt(1))
+    val amount: Int = CardGenerator.getAmount(cardId.charAt(1))
 
     // Transfer money
     card ! Payment(amount)

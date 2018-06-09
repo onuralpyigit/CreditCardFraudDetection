@@ -4,11 +4,11 @@ import scala.util.Random
 
 object CardGenerator {
 
-  val limitDistributionList: List[Int] = List(1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,3,3,4)
+  val limitDistributionList: List[Int] = List(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 4)
 
   def generateRandomNumber(start: Int, end: Int): Int = {
     val n = start + Random.nextInt((end - start) + 1)
-    return  n
+    return n
   }
 
   def generateKind(): Int = {
@@ -30,12 +30,12 @@ object CardGenerator {
   }
 
   def generateCustomerNo(): Int = {
-    val customerNo = generateRandomNumber(0, 9999)
+    val customerNo = generateRandomNumber(0, 99999)
     return customerNo
   }
 
-  def generateCardId(kind: Int, limit: Int, home: Int, customerNo: Int) : String = {
-    val cardId = "" + kind + limit + "%02d".format(home) + "%04d".format(customerNo)
+  def generateCardId(kind: Int, limit: Int, home: Int, customerNo: Int): String = {
+    val cardId = "" + kind + limit + "%02d".format(home) + "%05d".format(customerNo)
     return cardId
   }
 
@@ -111,7 +111,7 @@ object CardGenerator {
     return amount
   }
 
-  def getFraudAmount(limit: Char) : Int = {
+  def getFraudAmount(limit: Char): Int = {
     var maxAmount = 0
     limit match {
       case '0' => maxAmount = 1000
@@ -121,7 +121,8 @@ object CardGenerator {
       case '4' => maxAmount = 30000
       case _ => maxAmount = 10
     }
-    val amount = generateRandomNumber((maxAmount-10), maxAmount)
+    val startLimit: Int = (maxAmount * 0.9).toInt
+    val amount = generateRandomNumber(startLimit, maxAmount)
     return amount
   }
 }

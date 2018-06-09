@@ -41,12 +41,12 @@ object TerminalGenerator {
   }
 
   def generateTerminalNo(): Int = {
-    val terminalNo = generateRandomNumber(0, 9)
+    val terminalNo = generateRandomNumber(0, 99)
     return terminalNo
   }
 
   def generateTerminalId(kind: Int, merchant: Int, location: Int, terminalNo: Int): String = {
-    val cardId = "" + kind + merchant + "%02d".format(location) + terminalNo
+    val cardId = "" + kind + merchant + "%02d".format(location) + "%02d".format(terminalNo)
     return cardId
   }
 
