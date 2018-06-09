@@ -58,6 +58,45 @@ object CardGenerator {
     return cardId
   }
 
+  def getCard(home: Int): String = {
+    // Generate kind
+    val kind = generateKind()
+
+    // Generate limit
+    val limit = generateLimit(kind)
+
+    // Generate customer no
+    val customerNo = generateCustomerNo()
+
+    // Generate card id
+    val cardId = generateCardId(kind, limit, home, customerNo)
+
+    return cardId
+  }
+
+  def getCard(location: String): String = {
+    // Generate kind
+    val kind = generateKind()
+
+    // Generate limit
+    val limit = generateLimit(kind)
+
+    // Find home location from given terminal location
+    var home = 0
+    do {
+      // Generate home
+      home = generateHome()
+    } while (location.toInt == home)
+
+    // Generate customer no
+    val customerNo = generateCustomerNo()
+
+    // Generate card id
+    val cardId = generateCardId(kind, limit, home, customerNo)
+
+    return cardId
+  }
+
   def getAmount(limit: Char): Int = {
     var maxAmount = 0
     limit match {

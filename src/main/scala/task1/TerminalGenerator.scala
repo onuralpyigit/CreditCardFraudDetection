@@ -6,7 +6,7 @@ object TerminalGenerator {
 
   def generateRandomNumber(start: Int, end: Int): Int = {
     val n = start + Random.nextInt((end - start) + 1)
-    return  n
+    return n
   }
 
   def generateKind(): Int = {
@@ -30,7 +30,7 @@ object TerminalGenerator {
     if (kind == 1) {
       // Add internet into location list
       val internet = 99
-      locationList = locationList:+internet
+      locationList = locationList :+ internet
     }
 
     // Choose a location randomly
@@ -89,6 +89,16 @@ object TerminalGenerator {
     // Generate merchant
     val merchant = generateMerchant(kind)
 
+    // Generate terminal no
+    val terminalNo = generateTerminalNo()
+
+    // Generate terminal id
+    val terminalId = generateTerminalId(kind, merchant, location, terminalNo)
+
+    return terminalId
+  }
+
+  def getTerminal(kind: Int, merchant: Int, location: Int): String = {
     // Generate terminal no
     val terminalNo = generateTerminalNo()
 
