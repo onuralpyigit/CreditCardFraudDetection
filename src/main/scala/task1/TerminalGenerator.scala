@@ -68,4 +68,33 @@ object TerminalGenerator {
 
     return terminalId
   }
+
+  def getTerminal(kind: Int): String = {
+    // Generate merchant
+    val merchant = generateMerchant(kind)
+
+    // Generate location
+    val location = generateLocation(kind)
+
+    // Generate terminal no
+    val terminalNo = generateTerminalNo()
+
+    // Generate terminal id
+    val terminalId = generateTerminalId(kind, merchant, location, terminalNo)
+
+    return terminalId
+  }
+
+  def getTerminal(kind: Int, location: Int): String = {
+    // Generate merchant
+    val merchant = generateMerchant(kind)
+
+    // Generate terminal no
+    val terminalNo = generateTerminalNo()
+
+    // Generate terminal id
+    val terminalId = generateTerminalId(kind, merchant, location, terminalNo)
+
+    return terminalId
+  }
 }

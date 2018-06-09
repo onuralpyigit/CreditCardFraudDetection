@@ -71,4 +71,18 @@ object CardGenerator {
     val amount = generateRandomNumber(0, maxAmount)
     return amount
   }
+
+  def getFraudAmount(limit: Char) : Int = {
+    var maxAmount = 0
+    limit match {
+      case '0' => maxAmount = 1000
+      case '1' => maxAmount = 5000
+      case '2' => maxAmount = 10000
+      case '3' => maxAmount = 20000
+      case '4' => maxAmount = 30000
+      case _ => maxAmount = 10
+    }
+    val amount = generateRandomNumber((maxAmount-10), maxAmount)
+    return amount
+  }
 }
