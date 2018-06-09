@@ -10,6 +10,7 @@ object Card {
 
   final case class Payment(amount: Int)
   case object Transfer
+  case object FraudTransfer
 }
 
 class Card(cardId: String, terminalActor: ActorRef) extends Actor {
@@ -22,14 +23,16 @@ class Card(cardId: String, terminalActor: ActorRef) extends Actor {
     case Payment(amount) =>
       this.amount = amount
     case Transfer =>
-      terminalActor ! Transaction(cardId, amount)
+      terminalActor ! Transaction(cardId, amount, 0)
+    case FraudTransfer =>
+      terminalActor ! Transaction(cardId, amount, 1)
   }
 }
 
 object Terminal {
   def props(terminalId: String): Props = Props(new Terminal(terminalId))
 
-  final case class Transaction(cardId: String, amount: Int)
+  final case class Transaction(cardId: String, amount: Int, fraud: Int)
 }
 
 class Terminal(terminalId: String) extends Actor with ActorLogging {
@@ -38,13 +41,13 @@ class Terminal(terminalId: String) extends Actor with ActorLogging {
   val dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm")
 
   def receive = {
-    case Transaction(cardId, amount) =>
+    case Transaction(cardId, amount, fraud) =>
       // Get transaction time
       val now = Calendar.getInstance().getTime()
       val transactionTime = dateFormat.format(now)
 
       // Print transaction log
-      log.info(transactionTime + "," + cardId + "," + terminalId + "," + amount)
-      println(transactionTime + "," + cardId + "," + terminalId + "," + amount)
+      log.info(transactionTime + "," + cardId + "," + terminalId + "," + amount + "," + fraud)
+      println(transactionTime + "," + cardId + "," + terminalId + "," + amount + "," + fraud)
   }
 }

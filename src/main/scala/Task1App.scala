@@ -21,4 +21,17 @@ object Task1App extends App {
     card ! Payment(amount)
     card ! Transfer
   }
+
+  system.scheduler.schedule(1 second, 10 seconds) {
+    val terminalId: String = TerminalGenerator.getTerminal()
+    val terminal: ActorRef = system.actorOf(Terminal.props(terminalId))
+
+    val cardId: String = CardGenerator.getCard()
+    val card: ActorRef = system.actorOf(Card.props(cardId, terminal))
+
+    val amount: Int = CardGenerator.getAmount(cardId.charAt(1))
+
+    card ! Payment(amount)
+    card ! FraudTransfer
+  }
 }

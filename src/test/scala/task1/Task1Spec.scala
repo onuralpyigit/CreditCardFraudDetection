@@ -28,7 +28,7 @@ class Task1Spec(_system: ActorSystem)
       val amount = 100
       card ! Payment(amount)
       card ! Transfer
-      testProbe.expectMsg(500 millis, Transaction(cardId, amount))
+      testProbe.expectMsg(500 millis, Transaction(cardId, amount, 0))
     }
   }
 
@@ -40,7 +40,7 @@ class Task1Spec(_system: ActorSystem)
       val amount = 100
       card ! Payment(amount)
       card ! Transfer
-      testProbe.expectMsg(500 millis, Transaction(cardId, amount))
+      testProbe.expectMsg(500 millis, Transaction(cardId, amount, 0))
     }
   }
 
