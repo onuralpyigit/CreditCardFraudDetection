@@ -68,6 +68,41 @@ class Task1Spec(_system: ActorSystem)
     }
   }
 
+  "A card id" should {
+    "consist of assigned home properties" in {
+      val home = 1
+      val cardId = CardGenerator.getCard(home)
+      val expectedCardHomeLocation = "01"
+      cardId.slice(2,4) shouldEqual(expectedCardHomeLocation)
+    }
+  }
+
+  "A card id" should {
+    "consist of different home properties given terminal location when transaction is fraud" in {
+      val terminalLocation = "01"
+      val cardId = CardGenerator.getCard(terminalLocation)
+      cardId.slice(2,4) should not be  (terminalLocation)
+    }
+  }
+
+  "Transaction amount" should {
+    "be smaller that card limit" in {
+      val limitAmount:Int = 1000
+      val limit:Char = '0'
+      val amount = CardGenerator.getAmount(limit)
+      amount should be <= (limitAmount)
+    }
+  }
+
+  "Fraud transaction amount" should {
+    "be between (card limit-10) and card limit" in {
+      val limitAmount:Int = 1000
+      val limit:Char = '0'
+      val amount = CardGenerator.getFraudAmount(limit)
+      amount should (be >= (limitAmount-10) and be <= (limitAmount))
+    }
+  }
+
   "A pos id" should {
     "consist of kind, merchant, and location properties" in {
       val kind = 1
