@@ -74,7 +74,7 @@ object CardGenerator {
     return cardId
   }
 
-  def getCard(location: String): String = {
+  def getCardFromDifferentLocation(location: String): String = {
     // Generate kind
     val kind = generateKind()
 

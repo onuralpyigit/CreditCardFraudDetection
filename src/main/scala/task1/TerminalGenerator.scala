@@ -46,8 +46,8 @@ object TerminalGenerator {
   }
 
   def generateTerminalId(kind: Int, merchant: Int, location: Int, terminalNo: Int): String = {
-    val cardId = "" + kind + merchant + "%02d".format(location) + "%02d".format(terminalNo)
-    return cardId
+    val terminalId = "" + kind + merchant + "%02d".format(location) + "%02d".format(terminalNo)
+    return terminalId
   }
 
   def getTerminal(): String = {

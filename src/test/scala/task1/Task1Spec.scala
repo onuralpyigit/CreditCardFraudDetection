@@ -80,7 +80,7 @@ class Task1Spec(_system: ActorSystem)
   "A card id" should {
     "contain in different home property given terminal location when transaction is fraud" in {
       val terminalLocation = "01"
-      val cardId = CardGenerator.getCard(terminalLocation)
+      val cardId = CardGenerator.getCardFromDifferentLocation(terminalLocation)
       cardId.slice(2, 4) should not be (terminalLocation)
     }
   }
@@ -106,11 +106,11 @@ class Task1Spec(_system: ActorSystem)
   "A pos id" should {
     "consist of kind, merchant, and location properties" in {
       val kind = 1
-      val merchant = 0
+      val merchant = 2
       val location = 46
       val terminalNo = 1
       val terminalId = TerminalGenerator.generateTerminalId(kind, merchant, location, terminalNo)
-      val expectedTerminalId = "104601"
+      val expectedTerminalId = "124601"
       terminalId shouldEqual (expectedTerminalId)
     }
   }
@@ -119,10 +119,10 @@ class Task1Spec(_system: ActorSystem)
     "consist of kind, merchant, and location properties" in {
       val kind = 0
       val merchant = 0
-      val location = 0
+      val location = 34
       val terminalNo = 99
       val terminalId = TerminalGenerator.generateTerminalId(kind, merchant, location, terminalNo)
-      val expectedTerminalId = "000099"
+      val expectedTerminalId = "003499"
       terminalId shouldEqual (expectedTerminalId)
     }
   }

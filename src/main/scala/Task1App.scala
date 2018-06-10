@@ -120,7 +120,7 @@ object Task1App extends App {
 
     // Create card actor
     val terminalLocation = terminalId.slice(2,4)
-    val cardId: String = CardGenerator.getCard(terminalLocation)
+    val cardId: String = CardGenerator.getCardFromDifferentLocation(terminalLocation)
     val card: ActorRef = system.actorOf(Card.props(cardId, terminal))
 
     // Get random amount of fraud transaction
